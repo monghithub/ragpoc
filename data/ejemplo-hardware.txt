@@ -1,0 +1,30 @@
+Especificaciones del Bosgame M5 Mini PC
+
+El Bosgame M5 es un mini PC de alto rendimiento diseñado para cargas de trabajo de IA local.
+
+Procesador: AMD Ryzen AI Max+ 395
+- Arquitectura: Zen 5
+- Núcleos: 16 cores / 32 threads
+- NPU integrado para aceleración de IA
+- TDP configurable
+
+GPU integrada: AMD Radeon 8060S
+- Arquitectura: RDNA 3.5
+- Compute Units: 40 CUs
+- Backend: Vulkan
+- Memoria compartida con CPU (arquitectura unificada)
+
+Memoria: 96-128 GB LPDDR5X
+- Arquitectura de memoria unificada: CPU y GPU comparten el mismo pool de RAM
+- Esto permite cargar modelos LLM grandes (hasta 80B parámetros cuantizados)
+  completamente en memoria sin necesidad de GPU dedicada con VRAM separada
+- Ancho de banda de memoria suficiente para inferencia eficiente
+
+Almacenamiento: NVMe PCIe 4.0
+- Capacidad: 1.9 TB total
+- Espacio disponible: ~1.4 TB (21% en uso)
+
+Sistema operativo: Ubuntu 25.10 (Questing Quokka)
+- Kernel: Linux 6.17.0-14-generic
+- Python 3.13.7 disponible nativamente
+- Soporte AMD ROCm disponible vía repositorios oficiales

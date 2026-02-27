@@ -1,0 +1,24 @@
+Lemonade Server es un servidor de inferencia LLM desarrollado por AMD para ejecutar modelos
+de lenguaje de forma local. Está optimizado para hardware AMD, especialmente para las APUs
+con GPU integrada como el Ryzen AI Max+ 395.
+
+Características principales de Lemonade:
+- API compatible con OpenAI: cualquier cliente que soporte base_url custom puede conectarse.
+- Backend Vulkan: utiliza la GPU integrada RDNA 3.5 para la inferencia.
+- Soporte para modelos GGUF: usa llamacpp como recipe de inferencia.
+- Instalación vía Snap: se ejecuta como servicio systemd sin necesidad de Docker.
+- Contexto máximo de 32768 tokens.
+
+Modelos soportados:
+- Qwen3-8B (Q4_1, ~5.3 GB): ideal para desarrollo e iteración rápida.
+- Qwen3-Next-80B-A3B-Instruct (Q4_K_XL, ~42.9 GB): máxima calidad de inferencia.
+
+Para conectarse a Lemonade desde Python:
+  from openai import OpenAI
+  client = OpenAI(base_url="http://localhost:8000/api/v1", api_key="lemonade")
+
+El api_key puede ser cualquier string ya que Lemonade no valida la autenticación.
+El endpoint de modelos está en /api/v1/models y sigue el formato de la API de OpenAI.
+
+Lemonade no sirve modelos de embeddings dedicados como nomic-embed-text o bge-m3.
+Para embeddings, se debe usar un proceso separado como sentence-transformers en Python.
