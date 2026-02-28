@@ -1,5 +1,7 @@
 """Pipeline RAG: query → retrieve → prompt → LLM."""
 
+import time
+
 from openai import OpenAI
 
 from .config import LEMONADE_BASE_URL, LEMONADE_API_KEY, LEMONADE_MODEL, RAG_SYSTEM_PROMPT, TOP_K
@@ -39,15 +41,25 @@ def query_rag(query: str, top_k: int = TOP_K, model: str | None = None) -> dict:
     # 2. Build prompt
     messages = _build_prompt(query, chunks)
 
-    # 3. Call LLM
+    # 3. Call LLM (con reintentos por si Lemonade está cargando el modelo)
     client = OpenAI(base_url=LEMONADE_BASE_URL, api_key=LEMONADE_API_KEY)
-    response = client.chat.completions.create(
-        model=model or LEMONADE_MODEL,
-        messages=messages,
-    )
+    answer = None
+    usage = None
 
-    answer = response.choices[0].message.content
-    usage = response.usage
+    for attempt in range(3):
+        response = client.chat.completions.create(
+            model=model or LEMONADE_MODEL,
+            messages=messages,
+        )
+        if response.choices:
+            answer = response.choices[0].message.content
+            usage = response.usage
+            if answer is not None:
+                break
+        time.sleep(5)
+
+    if answer is None:
+        answer = "(Lemonade no devolvió respuesta — el modelo puede estar cargándose)"
 
     return {
         "query": query,
